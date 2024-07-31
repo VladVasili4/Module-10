@@ -4,22 +4,22 @@ from datetime import datetime
 import io
 
 def wite_words(word_count, file_name):
-    start_ = datetime.now()
     with open(file_name, 'a', encoding = 'UTF-8') as file:
         # for line in file:
         for i in range(word_count):
             file.write(f'Какое-то слово № {i} \n')
             sleep(0.1)
         print(f'Завершилась запись в файл {file_name}')
-    finish_ = datetime.now()
-    working_time = finish_ - start_
-    print(f'Программа работала {working_time} сек.')
 
 
+start_ = datetime.now()
 wite_words(10, 'example1.txt')
 wite_words(30, 'example2.txt')
 wite_words(200, 'example3.txt')
 wite_words(100, 'example4.txt')
+finish_ = datetime.now()
+working_time = finish_ - start_
+print(f'Работа потоков {working_time} сек.')
 
 
 start_1 = datetime.now()
@@ -40,4 +40,4 @@ thr4.join()
 
 finish_1 = datetime.now()
 working_time1 = finish_1 - start_1
-print(f'Потоки работали {working_time1} сек.')
+print(f'Работа потоков {working_time1} сек.')
