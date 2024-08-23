@@ -75,12 +75,12 @@ print(f'Итоговый баланс: {bk.balance}')
 from threading import Thread, Lock
 from time import sleep
 from random import randint
-lock = Lock()
 
-class Bank(Thread):
+
+class Bank():
     def __init__(self):
-        super().__init__()
         self.balanse = 0
+        self.lock = Lock()
 
 
     def deposit(self):
@@ -89,8 +89,8 @@ class Bank(Thread):
             j = randint(50, 500)
             self.balanse += j
             print(f'Пополнение: {j} рублей. Баланс: {self.balanse} р.')
-        if lock.locked() and self.balanse >= 500:
-            lock.release()
+        if self.lock.locked() and self.balanse >= 500:
+            self.lock.release()
 
 
     def take(self):
@@ -99,7 +99,7 @@ class Bank(Thread):
             j = randint(50, 500)
             print(f'Запрос на {j} рублей')
             if j > self.balanse:
-                lock.acquire()
+                self.lock.acquire()
                 print(f'Запрос отклонён, недостаточно средств')
             else:
                 self.balanse -= j
@@ -108,17 +108,13 @@ class Bank(Thread):
 
 
 bk = Bank()
-thr1 = Thread(target = bk.deposit(), args = (bk,))
-thr2 = Thread(target = bk.take(), args = (bk,))
+thr1 = Thread(target=bk.deposit(), args=(bk,))
+thr2 = Thread(target=bk.take(), args=(bk,))
 
 thr1.start()
 thr2.start()
 
 thr1.join()
 thr2.join()
-
-# bk.start()
-# bk.join()
-
 
 print (f'Баланс счета в банке "bk" {bk.balanse} p.')
