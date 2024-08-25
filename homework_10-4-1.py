@@ -7,10 +7,6 @@ class Table:
     def __init__(self, number):
         self.number = number
         self.guest = None
-        # for t in tables:
-        #     self.table = t.number
-        #     print(f'Cтолик в кафе :{self.table}')
-
 
 
 class Guest(Thread):
@@ -22,41 +18,37 @@ class Guest(Thread):
         i = random.randint(3, 11)
         sleep(i)
         print(f' {self.name} сидит, ест.')
-        raise Exception
 
 
-# queue = queue.Queue
 class Cafe():
 
     def __init__(self, tables, queue):
         super().__init__()
         self.tables = tables                             # Это список объектов "Cтолы"
-        print(f'Класс Кафе self.tables : {self.tables}')
-        self.que = queue.Queue
-        print(f'Класс Кафе изначальный queue (self.q): {self.que}')
-
+        self.que = queue.Queue()
 
     def guest_arrival(self, *guests):                      #  (прибытие гостей)
-        self.guests = guests
-
-        for self.t in self.tables:
-            print(f'Выбрали столик № (self.t) : {self.t.number}')
-            for self.g in self.guests:
-                if self.t.guest == None:
-              #  try:                    Где-то здесь надо создать исключение, чтобы игнорировать повторный запуск
-              #  потока и продолжить уже со следующим потоком (гостем)
-
-                    print(f'Выбрали гостя self.g : {type(self.g)}')
-                    self.t.guest = self.g
-                    print(f'self.t.guest : {self.t.guest}')
-                    print(f"{self.g.name} сел(-а) за стол номер {self.t.number}")
-
+        # self.guests = guests
+        for table in self.tables:
+            print(f'Стол занят? {table.guest}')
+            sleep(3)
+            if table.guest is None:
+                try:
+                   for guest in guests:
+                        guest.start()
+                        print(f'{guest.name} сел(-а) за стол номер {table.number}')
+                        table.guest = guest
+                        break
+                except: print(f'{guest.name} уже сидит за этим столом')
+            else:
+                print(f'{guest.name} в очереди')
+                self.que.put(guest)
 
 
     def discuss_guests(self):                      # (обслужить гостей)
-        while not self.que.empty:
-            if self.g.is_alive:
-                self.g.join()
+        while not self.que.empty():
+            if self.guest.is_alive:
+                self.guest.join()
                 print(f'<имя гостя за текущим столом> покушал(-а) и ушёл(ушла)"')
                 # for i in guests:
                 #     i.join()
