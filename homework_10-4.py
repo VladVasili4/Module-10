@@ -83,7 +83,7 @@ Pavel покушал(-а) и ушёл(ушла)
 Для проверки выполнения потока в текущий момент используйте метод is_alive.
 """
 
-from threading import Thread, excepthook
+from threading import Thread
 from time import sleep
 import random
 import queue
