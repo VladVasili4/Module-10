@@ -106,12 +106,10 @@ class Guest(Thread):
 
 
 class Cafe():
-
     def __init__(self, tables, queue):
         super().__init__()
         self.tables = tables                             # Это список объектов "Cтолы"
         self.que = queue.Queue()
-
 
 
     def guest_arrival(self, *guests):
@@ -141,19 +139,9 @@ class Cafe():
                     table.guest.start()
 
 
-
-
-
-                # for i in guests:
-                #     i.join()
-                # self.queue.get(i)
-                # print(f'Поел: {i}')
-
-
 # Создание столов
 tables = [Table(number) for number in range(1, 6)]          # Это генератор списка!!!
 print(f'Столики с номерами {tables} ')
-
 
 # Имена гостей
 guests_names = [
@@ -161,15 +149,8 @@ guests_names = [
 'Vitoria', 'Nikita', 'Galina', 'Pavel', 'Ilya', 'Alexandra'
 ]
 # Создание гостей
-
 guests = [Guest(name) for name in guests_names]             # Это генератор списка!!!
 print(f'Гости : {guests}')
-# for g in guests:
-#     g.start()
-
-# for i in guests:
-#     i.join()
-#     print(f'Поел: {i}')
 
 # Заполнение кафе столами
 cafe = Cafe(tables, queue)
