@@ -1,48 +1,71 @@
+"""
+Задача "Многопроцессное считывание":
+Необходимо считать информацию из нескольких файлов одновременно, используя многопроцессный подход.
+Подготовка:
+Скачайте архив с файлами для считывания данных и распакуйте его в проект для дальнейшего использования.
+Выполнение:
+Создайте функцию read_info(name), где name - название файла. Функция должна:
+Создавать локальный список all_data.
+Открывать файл name для чтения.
+Считывать информацию построчно (readline), пока считанная строка не окажется пустой.
+Во время считывания добавлять каждую строку в список all_data.
+Этих операций достаточно, чтобы рассмотреть преимущество многопроцессного выполнения программы над линейным.
+Создайте список названий файлов в соответствии с названиями файлов архива.
+Вызовите функцию read_info для каждого файла по очереди (линейно) и измерьте время выполнения и выведите его в консоль.
+Вызовите функцию read_info для каждого файла, используя многопроцессный подход: контекстный менеджер with и объект Pool.
+ Для вызова функции используйте метод map, передав в него функцию read_info и список названий файлов.
+ Измерьте время выполнения и выведите его в консоль.
+Для избежания некорректного вывода запускайте линейный вызов и многопроцессный по отдельности,
+ предварительно закомментировав другой.
+
+Пример результата выполнения программы:
+Выполняемый код:
+def read_info(name):
+...
+filenames = [f'./file {number}.txt' for number in range(1, 5)]
+
+# Линейный вызов
+
+# Многопроцессный
+
+Вывод на консоль, 2 запуска (результаты могут отличаться):
+0:00:03.046163 (линейный)
+0:00:01.092300 (многопроцессный)
+
+Примечания:
+Используйте конструкцию if __name__ == '__main__' при многопроссном подходе.
+Выводить или возвращать список all_data в функции не нужно. Можете сделать это, но кол-во информации
+в файлах достигает - 10^9 строк."""
+
+
 import multiprocessing
-import io
-import os
-import sys
 from datetime import datetime
 
 
 def read_info(name):
     all_data = []
-    my_folder = os.path.dirname(os.path.abspath(sys.argv[0]))
-    folder2 = 'files_10_5'
-    name_of_file = os.path.join(my_folder, folder2, name)
-    with open (name_of_file, 'r') as file:
+    with open (name, 'r') as file1:
         while True:
-            line = file.readline()
+            line = file1.readline().strip()
             all_data.append(line)
             if not line:
                 break
-    print(all_data)
 
+files = ['file 1.txt', 'file 2.txt', 'file 3.txt', 'file 4.txt']
 start1 = datetime.now()
 
-for i in range(1, 5):
-    name = f'file {i}.txt'
-    print(name)
-    read_info(name)
+for f in files:
+    print(f)
+    read_info(f)
 
 end1 = datetime.now()
 time_of_line_function = end1 - start1
 print(f'Время работы линейного вызова : {time_of_line_function}')
 
-
-
 if __name__ == '__main__':
-
     start2 = datetime.now()
 
-    files = []
-    for i in range(1, 5):
-        name = f'file {i}.txt'
-        files.append(name)
     with multiprocessing.Pool(processes=4) as pool:
-
-
-        # print(files)
         pool.map(read_info, files)
 
     end2 = datetime.now()
@@ -52,12 +75,6 @@ if __name__ == '__main__':
 
 
 
-# print(folder3)
-# files = os.listdir('directory')
-# print(f'Путь к файлу : {sys.argv[0]}')
-# print(f'Путь к папке : {os.path.dirname(os.path.abspath(sys.argv[0]))}')
-# print(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0]))))
 
 
-if __name__ == '__main__':
-    pass
+
